@@ -1,0 +1,50 @@
+// 이 프로젝트의 플러그인 의존성 관리를 위한 설정
+// ext : build.gradle 에서 사용하는 전역변수를 설정하겠다는 의미.
+// spring-boot-gradle-plugin 라는 스프링 부트 그레들 플러그인의 2.1.9,RELEASE 를 의존성으로 받겠다는 의미
+buildscript {
+    ext {
+        springBootVersion = '2.1.7.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+// 4개의 플러그인은 자바와 스프링부트를 사용하기 위해서는 필수 플러그인이니 항상 추가해야함
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'com.jojoldu.book'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+// 각종 의존성(라이브러리)들을 어떤 원격 저장소에 받을지 정함
+repositories {
+    mavenCentral() // 기본적으로 많이 사용
+    jcenter() // 최근에는 라이브러리 업로드 난이도 때문에 많이 사용
+}
+
+// 프로젝트 개발에 필요한 의존성들을 선언하는 곳
+// 의존성 코드는 직접 작성해도 되고, 자동완성으로 만들어도 됨. 단, 특정 버전을 명시하면 안됨
+// 버전을 명시하지 않아야 맨 위에 작성한 springBootVersion 을 따라가게됨
+// 이렇게 관리 시 라이브러리들의 버전관리가 한곳에 집중되고, 버전 충돌 문제도 해결되어 편하게 개발을 진행할 수 있음
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-web')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+/*
+빌드 -> .java 로 된 파일을 .class 파일로 만듦 -> javac 경로에 있음
+java는 byte 코드로 만들기 때문에 위 작업을 통해 jvm 이 읽을 수 있게 만듦
+단, 반복문이나 자주 사용하는 코드의 경우 네이티브 언어로 만들어서 빠른속도로 실행 가능하도록 함 => jit 이 수행
+
+(c언어는 빌드 시 0과 1로 이루어진 네이티브 언어를 만듦, 속도가 빠름)
+
+?환경변수 설정하는 이유
+*/
